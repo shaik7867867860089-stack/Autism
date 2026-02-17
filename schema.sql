@@ -34,7 +34,7 @@ CREATE TABLE children (
     child_id SERIAL PRIMARY KEY,
     unique_child_code VARCHAR(100) UNIQUE NOT NULL,
     first_name VARCHAR(100),
-    last_name VARCHAR(100),
+    mother_name VARCHAR(100),
     dob DATE NOT NULL,
     gender VARCHAR(20),
 
@@ -74,7 +74,7 @@ CREATE TABLE assessments (
     delayed_domains INT,
 
     -- Neuro Behavioral
-    autism_screen_flag BOOLEAN,
+    autism_screen_flag FLOAT,
     attention_score FLOAT,
     behavior_score FLOAT,
 
@@ -82,12 +82,12 @@ CREATE TABLE assessments (
     stunting BOOLEAN,
     wasting BOOLEAN,
     anemia BOOLEAN,
-    nutrition_score FLOAT,
+    nutrition_score INT,
 
     -- Environment
-    stimulation_score FLOAT,
-    caregiver_engagement_score FLOAT,
-    language_exposure_score FLOAT,
+    stimulation_score INT,
+    caregiver_engagement_score INT,
+    language_exposure_score BOOLEAN,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
