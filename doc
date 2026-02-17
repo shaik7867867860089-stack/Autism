@@ -1,48 +1,20 @@
-# AI-Based Early Childhood Development (ECD) Risk Stratification and Predictive Analytics System  
-## Complete Technical Documentation
+erDiagram
 
-This document presents the complete technical architecture, modeling framework, mathematical formulation, deployment strategy, governance model, and impact design of an AI-enabled Early Childhood Development (ECD) Decision Support System for children aged 0–6 years. The system is designed as a screening-level, explainable artificial intelligence layer that augments ICDS frontline workers in early identification, risk stratification, predictive early warning, referral prioritization, and longitudinal developmental monitoring. The system does not perform medical diagnosis and does not replace clinical judgment. It provides structured, transparent, and scientifically aligned risk insights to support early action within public health workflows.
+    STATES ||--o{ DISTRICTS : contains
+    DISTRICTS ||--o{ MANDALS : contains
+    MANDALS ||--o{ ANGANWADI_CENTERS : contains
+    ANGANWADI_CENTERS ||--o{ CHILDREN : registers
 
-Early childhood development during the first six years of life represents a critical neurodevelopmental window. Developmental delays across cognitive, motor, language, and socio-emotional domains often manifest subtly and are frequently detected late due to manual observation variability, high caseloads, and absence of predictive prioritization mechanisms. The proposed system addresses these challenges by integrating structured developmental, behavioral, nutritional, and environmental data into a unified AI framework that enables objective classification and future risk prediction.
+    CHILDREN ||--o{ ASSESSMENTS : undergoes
+    ASSESSMENTS ||--|| ENGINEERED_FEATURES : generates
+    ASSESSMENTS ||--|| MODEL_PREDICTIONS : produces
+    MODEL_PREDICTIONS ||--o{ SHAP_EXPLANATIONS : explains
+    ASSESSMENTS ||--o{ REFERRALS : triggers
+    CHILDREN ||--o{ INTERVENTIONS : receives
 
-The system operates through a layered architecture. Raw structured datasets are first subjected to data cleaning, validation, and encoding. This is followed by a feature engineering layer where domain-specific composite indices are computed. The engineered feature vectors are then passed into two complementary AI models: Model A for current risk classification and Model B for future risk escalation prediction. Outputs from these models are processed through an explainability engine based on SHAP (SHapley Additive exPlanations) to ensure transparent feature attribution. A hybrid clinical safeguard rule layer ensures scientific validity and prevents under-classification of vulnerable children. The outputs feed into a decision-support and referral logic module, which then integrates with role-based dashboards and a longitudinal monitoring engine.
+    STATES ||--o{ USERS : scoped_to
+    DISTRICTS ||--o{ USERS : scoped_to
+    MANDALS ||--o{ USERS : scoped_to
+    ANGANWADI_CENTERS ||--o{ USERS : scoped_to
 
-The data architecture includes child registration data such as child ID, age in months, gender, Anganwadi center, mandal, district, and assessment cycle. Developmental indicators include Gross Motor (GM), Fine Motor (FM), Language (LC), Cognitive (COG), and Socio-Emotional (SE) domain scores, along with Composite Developmental Quotient and number of delayed domains. Neuro-behavioral indicators include screening-level autism flags, attention regulation scores, and behavioral risk measures. Nutrition indicators include stunting, wasting, anemia, and nutrition score. Environmental and caregiving indicators include stimulation score, caregiver engagement, and language exposure. Follow-up and outcome variables include referral generation, referral completion, intervention delivery, improvement status, and reduction in delay months.
-
-Feature engineering transforms raw indicators into structured composite indices. A Developmental Severity Index is derived from domain-specific DQ deviations and delay counts. A Neuro Risk Index aggregates autism screening indicators, attention regulation measures, and behavioral scores. A Nutrition Risk Index combines stunting, anemia, and nutrition scores using weighted normalization. An Environmental Risk Index reflects caregiving and stimulation factors. For predictive modeling, time-delta features are computed including change in composite DQ, change in delay count, change in nutrition score, change in behavior score, follow-up gap duration, and intervention compliance flags.
-
-Mathematically, each child i at time t is represented by a feature vector Xᵢᵗ. The target variable for Model A is Yᵢᵗ ∈ {0,1,2,3} representing Low, Medium, High, and Critical risk categories. Model A is formulated as a multi-class classification problem using gradient boosting. The predicted probability for class k is given by:
-
-P(Yᵢᵗ = k | Xᵢᵗ) = exp(f_k(Xᵢᵗ)) / Σ exp(f_j(Xᵢᵗ))
-
-The predicted class is selected as the argmax of the probability distribution. The optimization objective minimizes multi-class log loss across training samples.
-
-Model B predicts future escalation. Define Zᵢᵗ⁺¹ = 1 if Yᵢᵗ⁺¹ ≥ High, otherwise 0. The model estimates:
-
-P(Zᵢᵗ⁺¹ = 1 | Xᵢᵗ) = 1 / (1 + e^(-f(Xᵢᵗ)))
-
-The optimization minimizes binary cross-entropy loss. Temporal relationships are captured through engineered delta features rather than black-box recurrent networks to maintain interpretability and regulatory transparency.
-
-Both models are implemented using Extreme Gradient Boosting (XGBoost) due to its high performance on structured tabular data, robustness to missing values, capacity to handle non-linear feature interactions, and compatibility with SHAP-based interpretability. Hyperparameter tuning is conducted using stratified K-fold cross-validation. Evaluation metrics include accuracy, precision, recall, F1-score, ROC-AUC, and calibration score. The Proof-of-Concept target is to achieve ≥ 95% screening-level classification accuracy as required by evaluation guidelines.
-
-To ensure ethical deployment, a hybrid rule-based safeguard layer is integrated. For example, if Language DQ < 70 and Socio-Emotional DQ < 75 and age > 24 months, the minimum classification is set to Medium risk regardless of model output. This prevents under-classification and ensures alignment with developmental surveillance norms.
-
-The explainability framework decomposes each prediction as:
-
-f(Xᵢ) = φ₀ + Σ φⱼ
-
-Where φⱼ represents the contribution of feature j to the final prediction. For each child, the system displays the top contributing risk factors and domain contribution percentages. This transparency ensures accountability, reduces algorithmic opacity, and increases field-level trust.
-
-The decision-support layer translates risk outputs into action pathways. Low-risk children are scheduled for routine monitoring. Medium-risk children receive targeted stimulation guidance. High-risk children trigger referral recommendations. Critical-risk children generate immediate referral alerts with urgency tagging. The system also monitors referral completion rates and follow-up compliance.
-
-The longitudinal monitoring engine tracks risk transitions, domain-level improvement, reduction in delay months, exit-from-high-risk rates, and intervention effectiveness. Cohort-level analytics allow administrators to evaluate program performance across Anganwadi centers, mandals, districts, and state levels.
-
-Role-based dashboards provide differentiated access. Anganwadi Workers view child-level risk scores and recommended actions. Supervisors view aggregated center-level performance metrics. District officers monitor trend analytics and referral compliance. State-level administrators access macro-level developmental trends and policy dashboards. All indicators support roll-up aggregation across governance levels.
-
-The deployment architecture includes a secure MongoDB data layer for structured storage, a Python-based machine learning pipeline integrating XGBoost and SHAP, FastAPI-based backend services for model serving, and a web-based role-based dashboard interface. The system is designed for API-based integration with ICDS and health information systems. Data encryption, role-based access control, and privacy-by-design principles ensure compliance with DPDP Act 2023 and child data protection norms.
-
-Scalability is achieved through modular architecture, containerized deployment, and cloud-ready infrastructure. The system supports district-wise rollout, offline-compatible data capture, and structured training modules for frontline workers. A sustainability roadmap includes government ownership transition, capacity building, and maintenance protocols.
-
-The expected outcomes include earlier identification of developmental risk, reduction in screening variability, predictive early warnings before severe delay manifestation, improved referral completion, measurable developmental improvement, and data-driven governance insights.
-
-This AI-enabled ECD Decision Support System integrates multi-domain developmental indicators, explainable machine learning, predictive analytics, and longitudinal monitoring into a unified, scalable, and ethically compliant architecture. It strengthens frontline capacity, enhances program effectiveness, and enables evidence-based child development governance at scale.
+    USERS ||--o{ AUDIT_LOGS : creates
