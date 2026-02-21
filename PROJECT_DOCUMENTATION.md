@@ -136,7 +136,7 @@ The system's models are calibrated for clinical safety (high sensitivity to ensu
 - **Confusion Matrix**: Optimized to minimize false negatives in clinical screening.
 
 #### Training Efficiency
-![Learning Curves](../ml/evaluation/classifier/learning_curves.png)
+![Learning Curves](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/learning_curves.png)
 - **Error Convergence**: Training and validation logs show a stable model that generalizes well to new, unseen children.
 - **Consistency**: High performance across varied age groups (18-60 months).
 
