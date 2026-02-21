@@ -141,12 +141,12 @@ The system's models are calibrated for clinical safety (high sensitivity to ensu
 - **Consistency**: High performance across varied age groups (18-60 months).
 
 #### AI Global Transparency
-![SHAP Global Summary](../ml/evaluation/classifier/shap_summary.png)
+![SHAP Global Summary](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/learning_curves.png)
 - **Language_DQ & Socio_Emotional_DQ**: These are the strongest global drivers, confirming that communication deficits are the primary indicators of risk in this population.
 - **Feature Impact**: SHAP summarizes how each individual DQ score pushes the "needle" toward high or low risk.
 
 #### Field Validation
-![Field Accuracy](../ml/evaluation/classifier/WhatsApp%20Image%202026-02-21%20at%203.33.14%20PM.jpeg)
+![Field Accuracy](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/shap_summary.png)
 - Visualization of the actual distribution of developmental quotients captured from the field implementation, validating the model's environment.
 
 ````
