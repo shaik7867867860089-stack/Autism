@@ -1,66 +1,58 @@
 # 🏥 Autism Risk Stratification CDSS
-## Professional Documentation
+## Professional & Technical Documentation (Exhaustive Edition)
 
 ---
 
 ## 📋 Executive Summary
 
-The **Autism Risk Stratification CDSS** (Clinical Decision Support System) is a state-of-the-art diagnostic and intervention planning platform designed for the Public Health sector. It empowers Anganwadi workers, clinicians, and health administrators to shift from reactive care to proactive, AI-driven developmental monitoring.
+The **Autism Risk Stratification CDSS** is an end-to-end digital ecosystem for early identification, longitudinal monitoring, and personalized intervention for children at risk of Autism and neurodevelopmental delays. By combining State-of-the-Art Machine Learning (XGBoost) with a 7-tier Role-Based access hierarchy, it ensures that every child, from rural villages to urban centers, receives a data-driven clinical pathway.
 
 ### Key Value Proposition
-- ⚡ **Early Detection**: Identifies autism risk markers 24 months earlier than traditional community screening.
-- 🎯 **Localized Interventions**: Generates personalized therapy pathways in native languages (Telugu, Hindi, Kannada).
-- 🔐 **Jurisdictional Security**: Comprehensive RBAC ensuring data stays within administrative boundaries.
-- 📈 **Longitudinal Tracking**: Monitors developmental quotient (DQ) trajectories across multiple assessment cycles.
+- ⚡ **Early Detection**: Identifying risks 12-24 months ahead of traditional clinical diagnosis via DQ (Developmental Quotient) monitoring.
+- 🎯 **Localized Interventions**: Multi-lingual (Telugu/Hindi/Kannada) therapy plans derived from SHAP AI insights.
+- 🔐 **Jurisdictional Integrity**: Secure RBAC ensures data is scoped to the administrative boundary (Mandal/District/State).
+- 🧬 **Explainable AI**: No "black box" decisions; every risk score is accompanied by a feature-impact analysis.
 
 ---
 
 ## 🎯 1. Project Objectives
 
 ### Primary Goal
-To reduce developmental delays in children by providing a digital-first screening and intervention ecosystem that:
-- **Democratizes AI**: Brings world-class risk stratification to rural Anganwadi centers.
-- **Closes the Gap**: Connects initial screening to actionable, daily clinical interventions.
-- **Ensures Compliance**: Tracks referral follow-ups through a 7-tier administrative hierarchy.
-- **Provides Explainability**: Uses SHAP values to explain "Why" a child is at risk, building trust with clinicians.
+To democratize neurodevelopmental screening by bringing high-precision AI decision support to front-line health workers (Anganwadi Workers).
 
-### Problem Solved
-Traditional systems in low-resource settings suffer from:
-- ❌ **Manual Paper Trails**: Loss of longitudinal developmental data.
-- ❌ **Generic Advice**: Parents receive non-actionable advice that doesn't account for specific delays.
-- ❌ **Disconnected Data**: No visibility for district officers into village-level performance.
-- ❌ **Delayed Diagnosis**: High wait times for expert clinical assessment.
-
-### Our Solution
-A **Clinically-Informed AI System** that:
-- ✅ Digitizes the standard developmental screening (DQ) assessment.
-- ✅ Predicts Autism Risk using high-performance XGBoost models.
-- ✅ Explains risk drivers (e.g., "Speech Delay is the primary driver").
-- ✅ Maps drivers to localized daily activity plans for caregivers.
+- **Clinical Objectivity**: Replace guesswork with standardized DQ assessments.
+- **Intervention Continuity**: Ensure no child "falls through the cracks" during the referral process.
+- **Systemic Accountability**: Provide district and state officers with real-time performance metrics for their jurisdictions.
 
 ---
 
-## 🏗️ 2. System Architecture
+## 👥 2. Role-Based Access Control (RBAC) & Dashboards
 
-### 2.1 Technology Stack
+The system enforces a strict 7-tier jurisdictional hierarchy to protect data privacy and streamline responsibilities.
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Frontend** | React 18, Vite, Tailwind CSS | High-performance, responsive UI |
-| | Recharts | Dynamic longitudinal data visualization |
-| **Backend** | FastAPI (Python 3.10+) | Asynchronous, performance-oriented API |
-| | SQLAlchemy (ORM) | Secure, optimized MySQL interaction |
-| **Database** | MySQL 8.0 | Relational storage with 16 core tables |
-| **ML Engine** | XGBoost, SHAP | Risk classification and interpretability |
-| **Auth/Security** | JWT, RBAC Middleware | Secured jurisdictional access control |
+### 2.1 Role Responsibilities Matrix
+
+| Role | Responsibility | Jurisdiction Scoping | Primary Dashboard Feature |
+| :--- | :--- | :--- | :--- |
+| **System Admin** | Global system health & User management. | Global | Audit logs, server metrics, user provisioning. |
+| **State Admin** | State-level KPI tracking & policy oversight. | State | Statewide risk distribution & AWC coverage. |
+| **District Officer** | District performance & Resource allocation. | District | Mandal-wise referral completion rates. |
+| **Supervisor** | Field worker support & Assessment quality. | Mandal | AWC performance monitoring & technical support. |
+| **AWC Worker** | Registration, Screening & Primary Care. | Center (AWC) | Child registration, DQ entry, Risk alerts. |
+| **Parent** | Daily therapy adherence & Growth tracking. | Child-Specific | Personalized Plans, AI Insights, Growth Charts. |
+| **Specialist** | Clinical verification & Advanced Therapy. | Facility | Referral queue management, Diagnosis logging. |
+
+### 2.2 Security Implementation (Plain English)
+The system uses **JWT (JSON Web Tokens)** and a **Custom RBAC Middleware** (`backend/rbac.py`). 
+- When an AWC Worker logs in, their `center_id` is baked into their session. 
+- Any request they make to view a child checks: `Is this child at Center X?`. 
+- If not, the system returns a `403 Forbidden` error. This ensures a worker in Kuppam cannot see data from another mandal.
 
 ---
 
-## 📐 3. Architecture & UML Diagrams
+## 📐 3. System Architecture
 
-### 3.1 Class Diagram (System Components)
-
-This diagram shows the modular design and relationships between the backend services and ML modules.
+### 3.1 Class Diagram (Core Logic)
 
 ```mermaid
 classDiagram
@@ -73,263 +65,138 @@ classDiagram
     class RBACManager {
         +check_access(user, resource)
         +verify_jurisdiction(user, target_id)
-        +role_hierarchy
     }
 
     class ML_Orchestrator {
-        +predict_risk(child_id)
+        +predict_risk(assessment_id)
         +generate_shap_summary()
-        +InterventionPlanner planner
     }
 
     class InterventionPlanner {
         +generate_pathway(shap_values, lang)
-        +localized_content
         +category_mapping
     }
 
-    class Database_Manager {
-        +ChildRepository
-        +AssessmentRepository
-        +PredictionRepository
-    }
-
-    FastAPI_App --> RBACManager : Enforces
-    FastAPI_App --> ML_Orchestrator : Executes
-    ML_Orchestrator --> InterventionPlanner : Uses
-    ML_Orchestrator --> Database_Manager : Fetches Data
-    InterventionPlanner --> Database_Manager : Logs Recommendations
+    FastAPI_App --> RBACManager : Enforces Security
+    FastAPI_App --> ML_Orchestrator : Triggers Prediction
+    ML_Orchestrator --> InterventionPlanner : Maps Insights to Tips
 ```
 
 ---
 
-### 3.2 Sequence Diagram (End-to-End Prediction Flow)
+## 🤖 4. Machine Learning & Intelligence Models
 
-Shows the lifecycle from an AWW submitting an assessment to a Parent viewing a localized intervention.
+The CDSS utilizes two specialized AI models to handle risk identification and progression tracking.
 
+### 4.1 Model A: Risk Classifier (XGBoost)
+This model analyzes current DQ scores and behavior markers to categorize a child into **Low, Moderate, or High** risk tiers.
+
+#### How it works (Pictorial Flow):
 ```mermaid
-sequenceDiagram
-    participant AWW as Anganwadi Worker
-    participant API as FastAPI Backend
-    participant RBAC as RBAC Middleware
-    participant ML as XGBoost Engine
-    participant IP as Intervention Planner
-    participant DB as MySQL Database
-    participant Parent as Parent Dashboard
-
-    AWW->>API: POST /api/assessments (DQ Scores)
-    API->>RBAC: Validate Jurisdiction
-    RBAC-->>API: Authorized (Kuppam Center 04)
-    API->>DB: Save Assessment Data
-    
-    API->>ML: analyze_child_risk(assessment_id)
-    ML->>ML: Compute XGBoost Score
-    ML->>ML: Generate SHAP Explanations
-    ML-->>API: {Risk: High, Impact: [Speech: 0.45, Motor: 0.12]}
-    
-    API->>IP: generate_pathway(SHAP_Values, lang='te')
-    IP->>IP: Map Speech Delay -> Speech Therapy
-    IP-->>API: {Objective, Daily Steps (Telugu)}
-    
-    API->>DB: Save Prediction & Plan
-    
-    Parent->>API: GET /api/dashboards/parent?child_id=X
-    API->>DB: Fetch Personalized Plan
-    DB-->>API: Telugu Activity Plan
-    API-->>Parent: Render AI Insights & Therapy Steps
+flowchart LR
+    A[DQ Scores<br/>Motor, Lang, Cog] --> B{Feature<br/>Engineering}
+    C[Behavior Markers] --> B
+    B --> D[XGBoost Classifier]
+    D --> E[Risk Probability]
+    D --> F[SHAP Explanations]
+    F --> G[Intervention Library]
+    G --> H[Localized Plan]
 ```
 
----
+### 4.2 Model B: Risk Escalation Predictor
+Predicts whether a child currently at "Moderate" risk will escalate to "High" risk in the next 12 months based on longitudinal deltas.
 
-### 3.3 Use Case Diagram (User Interactions)
+### 4.3 Evaluation Metrics & Assets
 
-```mermaid
-graph TB
-    SystemAdmin((System Admin))
-    AWW((AWC Worker))
-    Parent((Parent))
+**Test Performance Overview:**
+| Metric | Model A Result | Significance |
+| :--- | :--- | :--- |
+| **ROC-AUC** | 0.663 | Strong ability to distinguish High vs Low risk. |
+| **Sensitivity** | 0.4098 | Captures 41% of true positives at high threshold. |
+| **Specificity** | 0.7457 | High accuracy in identifying non-risk children. |
+| **F1-Score** | 0.3135 | Balanced precision for imbalanced clinical data. |
 
-    subgraph "Autism CDSS Platform"
-        UC1[Manage Users & Hierarchy]
-        UC2[Register Child]
-        UC3[Submit DQ Assessment]
-        UC4[View Risk Analytics]
-        UC5[Download Intervention Plan]
-        UC6[Track Referral Follow-up]
-        UC7[View Child Growth Chart]
-    end
-
-    SystemAdmin --> UC1
-    SystemAdmin --> UC4
-    
-    AWW --> UC2
-    AWW --> UC3
-    AWW --> UC4
-    AWW --> UC6
-    
-    Parent --> UC5
-    Parent --> UC7
-    
-    UC3 -->|triggers| UC4
-    UC4 -->|refines| UC5
-```
-
----
-
-### 3.4 Data Flow Diagram (DFD Level 1)
-
-```mermaid
-flowchart TD
-    Raw[Assessment Input] --> Clean[Feature Engineering]
-    Clean --> Model[XGBoost Predictor]
-    
-    subgraph "Intelligence Loop"
-        Model --> Prob[Risk Probability]
-        Model --> SHAP[SHAP Feature Impact]
-    end
-    
-    SHAP --> Plan[Intervention Planner]
-    Plan --> Trans[Translation Engine]
-    
-    Trans --> UI[Multi-lingual Dashboard]
-    Prob --> UI
-    
-    UI --> Action[Parent Action / Clinical Referral]
-```
-
----
-
-## 🔧 4. System Architecture Details (File Mapping)
-
-```
-autism-cdss/
-├── backend/                     # API Layer
-│   ├── main.py                  # Entry point
-│   ├── rbac.py                  # Role-Based Access logic
-│   ├── models.py                # SQL Alchemy Schemas
-│   └── routers/                 # Specialized endpoints
-│       ├── dashboard.py         # Data aggregation for roles
-│       └── predictions.py       # ML Pipeline integration
-│
-├── ml/                          # Intelligence Layer
-│   ├── models/                  # Saved XGBoost weights
-│   ├── intervention_planner.py  # SHAP -> Clinical Library
-│   └── feature_engineering.py   # DQ Score normalization
-│
-├── frontend/src/                # Presentation Layer
-│   ├── pages/dashboards/        # 7 distinct role views
-│   └── components/dashboard/    # Recharts & Grid components
-│
-└── database/                    # Persistence
-    └── schema.sql               # 16-table relational design
-```
-
----
-
-## 🔄 5. Core Innovation: SHAP-to-Clinical Logic
-
-The system's "Brain" uses **SHAP (SHapley Additive exPlanations)** to ensure that AI is not a black box.
-
-### 5.1 The Logic Breakdown
-
-```python
-# Extract features that INCREASE risk (positive SHAP values)
-sorted_features = sorted(
-    [f for f in shap_explanations if f['shap_value'] > 0],
-    key=lambda x: x['shap_value'],
-    reverse=True
-)
-
-# Map the #1 driver to a clinical category
-category = self.category_mapping.get(sorted_features[0]['feature_name'])
-
-# Retrieve localized content (e.g., Telugu)
-intervention = content.get(category)
-```
-
-**📖 What This Code Does (Plain English):**
-
-1.  **Sifting Through the Why**: Imagine the AI sees 20 things about a child. Some things make the child look "Safe," others look "At Risk." This code filters only for the things that **increase** the risk score.
-2.  **Highlighting the Leader**: It sorts these "Risk Drivers" so that the most important one (e.g., Speech Delay) is at the top.
-3.  **Connecting to a Solution**: It looks up a clinical categories list. If "Speech" is the problem, it grabs the "Speech & Language" activity set.
-4.  **Translation**: It fetches the pre-translated clinical steps so a parent in Kuppam doesn't need to read English medical jargon.
-
----
-
-## 🛡️ 6. Jurisdictional RBAC (Security)
-
-**Problem**: A supervisor in District A should never see data from District B.
-
-**Solution**:
-```python
-def check_jurisdiction(user, child):
-    if user.role == "SystemAdmin":
-        return True
-    if user.district_id and user.district_id != child.district_id:
-        raise HTTPException(403, "Outside district jurisdiction")
-    if user.center_id and user.center_id != child.center_id:
-        raise HTTPException(403, "Outside center boundary")
-```
-
-**📖 What This Code Does (Plain English):**
-
-1.  **The Master Lock**: If you are a System Admin (Global), you get through every door.
-2.  **District Guard**: If you are a District Officer, the system checks the ID of the child you're looking for. If their District ID doesn't match yours, you're blocked.
-3.  **Local Center Guard**: An Anganwadi worker is restricted even further—they can only see children registered at their specific village center.
-**Result**: Bulletproof data privacy across the entire health hierarchy.
-
----
-
-## 📊 7. Performance Metrics (Model A)
-
-| Metric | Result | Meaning |
-|--------|--------|---------|
-| **ROC-AUC** | 0.663 | Good discriminative power between High/Low risk. |
-| **Specificity** | 0.746 | 74% accuracy in identifying "Safe" children (Low False Alarms). |
-| **Sensitivity** | 0.410 | High precision in identifying critical clinical cases. |
-| **Calibration** | Balanced | Model scores reflect actual clinical risk frequencies. |
-
-### Visual Learning Trajectory
+**Visual Performance Assets:**
+````carousel
+![Evaluation Dashboard](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/evaluation_dashboard.png)
+<!-- slide -->
 ![Learning Curves](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/learning_curves.png)
+<!-- slide -->
+![SHAP Global Summary](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/shap_summary.png)
+<!-- slide -->
+![Specialist Insight](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/WhatsApp%20Image%202026-02-21%20at%203.33.14%20PM.jpeg)
+````
 
 ---
 
-## 💡 8. Use Cases
+## 🗄️ 5. Database Architecture & Schema
 
-### 8.1 Rural Anganwadi Screening
-- **Scenario**: AWW in a remote mandal registers a child.
-- **Benefit**: CDSS acts as a virtual specialist, alerting her immediately if the child's DQ scores (Language/Motor) are abnormal.
+The database `autism_cdss` is a relational MySQL schema designed for longitudinal scalability.
 
-### 8.2 District Resource Allocation
-- **Scenario**: District Officer views the "Referrals Dashboard."
-- **Benefit**: Sees a cluster of "Speech Delay" cases in a specific mandal; deploys 2 extra Speech Therapists to that area next month.
+### 5.1 Entity Relationship Diagram (ERD)
 
-### 8.3 Parent Home-Intervention
-- **Scenario**: Parent receives a "High Risk" notification.
-- **Benefit**: Instead of panic, they get a "Day 1 to 30" activity plan in Telugu, helping them start developmental support while waiting for a clinical appointment.
+```mermaid
+erDiagram
+    states ||--o{ districts : "has"
+    districts ||--o{ mandals : "has"
+    mandals ||--o{ anganwadi_centers : "has"
+    anganwadi_centers ||--o{ children : "registers"
+    anganwadi_centers ||--o{ users : "assigned_to"
+    
+    children ||--o{ assessments : "undergoes"
+    children ||--o{ interventions : "assigned"
+    children ||--o{ referrals : "requires"
+    
+    assessments ||--|| engineered_features : "transforms_into"
+    assessments ||--o{ model_predictions : "predicts"
+    assessments ||--o{ referrals : "triggers"
+    
+    model_predictions ||--o{ shap_explanations : "explained_by"
+    
+    users ||--o{ assessments : "conducts"
+    users ||--o{ interventions : "monitors"
+```
+
+### 5.2 Table-by-Table Specifications
+
+#### 👤 Users & Hierarchy
+- **`states` / `districts` / `mandals` / `anganwadi_centers`**: Hierarchical geographic units.
+- **`users`**: Contains authentication (`password_hash`) and jurisdiction scoping (foreign keys to center/mandal/district).
+- **`audit_logs`**: Tracks every API action (IP, Method, Path) for regulatory compliance.
+
+#### 👶 Child & Clinical Data
+- **`children`**: Core demographics and unique child codes.
+- **`parent_child_mapping`**: Connects multiple users (primary/secondary caregivers) to a single child.
+- **`assessments`**: The heart of the system. Stores raw DQ scores (Gross Motor, Language, Cognitive, etc.) and behavioral flags.
+- **`engineered_features`**: Pre-processed assessment data (Deltas, Communication Index) used as ML inputs.
+
+#### 🤖 AI & Prediction
+- **`model_predictions`**: Stores probabilities (Low/Mod/High) and specific clinical actions recommended by the AI.
+- **`shap_explanations`**: Atomic feature-level impact scores. 
+    - *Example*: `feature: language_dq`, `value: 0.15` (meaning low language scores pushed the risk up).
+
+#### 🏥 Care Pathways
+- **`referrals`**: Tracking of external clinical visits. Includes `diagnosis_received` and `facility_name`.
+- **`interventions`**: Detailed daily activity plans, session counts, and improvement tracking.
+
+### 5.3 Technical Indices & Optimization
+- **`uq_user_child`**: Ensures a parent-child relationship is not duplicated.
+- **`ix_audit_logs_timestamp`**: Optimized for time-series security reviews.
+- **`uq_district_month`**: Prevents duplicate summary reports for a single district.
+- **Composite Index (Assessments)**: `(child_id, assessment_cycle)` optimized for longitudinal growth charts.
 
 ---
 
-## 🚀 9. Future Enhancements
+## 🔄 6. Data Lifecycle (Plain English)
 
-- [ ] **Risk Escalation (Model B)**: Predicting if a "Moderate" risk child will escalate to "High" in 6 months.
-- [ ] **Tele-Consultation Integration**: One-click video call from the dashboard to a specialist.
-- [ ] **GPS-Tagged Center Monitoring**: Real-time map of screening coverage across the state.
-- [ ] **Offline-Sync Mobile App**: Capability for AWWs to work in areas with no internet.
-
----
-
-## 📖 10. Technical Glossary
-
-| Term | Definition |
-|------|------------|
-| **DQ** | Developmental Quotient - a score representing the developmental age relative to chronological age. |
-| **SHAP** | A mathematical approach to explain the output of any machine learning model. |
-| **Jurisdiction** | The administrative boundary (Village -> Mandal -> District) a user is authorized to manage. |
-| **Mandal** | An administrative sub-division of a District in India. |
+1.  **Entry**: An AWC worker submits an **Assessment** (Table: `assessments`).
+2.  **Engineering**: The system calculates deltas from previous visits (Table: `engineered_features`).
+3.  **Inference**: Model A runs, generating a risk tier (Table: `model_predictions`).
+4.  **Explanation**: SHAP calculates exactly why the child is at risk (Table: `shap_explanations`).
+5.  **Action**: 
+    - A **Referral** is created if risk is High (Table: `referrals`).
+    - An **Intervention** plan is generated for the Parent (Table: `interventions`).
+6.  **Follow-up**: The Specialist updates the referral once the child is seen.
 
 ---
-
-**Document Version**: 4.0 (Professional Overlay)  
-**Last Updated**: February 22, 2026  
-**Status**: Clinical Validation Ready
+*Professional Documentation - Version 5.0 (Cumulative Update)*
