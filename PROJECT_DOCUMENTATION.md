@@ -158,6 +158,7 @@ The system's models are calibrated for clinical safety (high sensitivity to ensu
 The `autism_cdss` database is a relational MySQL 8.0 schema consisting of **15 interconnected tables**. It manages **~22,000 assessments** and **~11,000 children** with high performance.
 
 ### 5.1 Master Entity Relationship Diagram (ERD)
+![Database Schema](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/shap_summary.png)
 
 ```mermaid
 erDiagram
