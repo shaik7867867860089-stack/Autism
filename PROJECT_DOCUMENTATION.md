@@ -129,26 +129,26 @@ The system doesn't just look at raw scores; it creates advanced clinical indices
 
 The system's models are calibrated for clinical safety (high sensitivity to ensure no child is missed).
 
-````carousel
-![Evaluation Dashboard](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/evaluation_dashboard.png)
-### Comprehensive Performance (Model A)
+#### Comprehensive Performance (Model A)
+![Evaluation Dashboard](../ml/evaluation/classifier/evaluation_dashboard.png)
 - **ROC-AUC (0.66+)**: Robust ability to distinguish between high and low risk cases.
 - **Calibration**: Platt Scaling ensures that a "75% High Risk" prediction truly reflects a 75% observed risk in the population.
 - **Confusion Matrix**: Optimized to minimize false negatives in clinical screening.
-<!-- slide -->
-![Learning Curves](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/learning_curves.png)
-### Training Efficiency
+
+#### Training Efficiency
+![Learning Curves](../ml/evaluation/classifier/learning_curves.png)
 - **Error Convergence**: Training and validation logs show a stable model that generalizes well to new, unseen children.
 - **Consistency**: High performance across varied age groups (18-60 months).
-<!-- slide -->
-![SHAP Global Summary](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/shap_summary.png)
-### AI Global Transparency
+
+#### AI Global Transparency
+![SHAP Global Summary](../ml/evaluation/classifier/shap_summary.png)
 - **Language_DQ & Socio_Emotional_DQ**: These are the strongest global drivers, confirming that communication deficits are the primary indicators of risk in this population.
 - **Feature Impact**: SHAP summarizes how each individual DQ score pushes the "needle" toward high or low risk.
-<!-- slide -->
-![Field Accuracy](file:///c:/Users/S%20Sameer/Desktop/autism%20-%20Copy/ml/evaluation/classifier/WhatsApp%20Image%202026-02-21%20at%203.33.14%20PM.jpeg)
-### Field Validation
+
+#### Field Validation
+![Field Accuracy](../ml/evaluation/classifier/WhatsApp%20Image%202026-02-21%20at%203.33.14%20PM.jpeg)
 - Visualization of the actual distribution of developmental quotients captured from the field implementation, validating the model's environment.
+
 ````
 
 ---
