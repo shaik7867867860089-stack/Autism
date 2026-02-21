@@ -130,7 +130,7 @@ The system doesn't just look at raw scores; it creates advanced clinical indices
 The system's models are calibrated for clinical safety (high sensitivity to ensure no child is missed).
 
 #### Comprehensive Performance (Model A)
-![Evaluation Dashboard](../ml/evaluation/classifier/evaluation_dashboard.png)
+![Evaluation Dashboard](https://github.com/shaik7867867860089-stack/Autism/blob/main/classifier/evaluation_dashboard.png)
 - **ROC-AUC (0.66+)**: Robust ability to distinguish between high and low risk cases.
 - **Calibration**: Platt Scaling ensures that a "75% High Risk" prediction truly reflects a 75% observed risk in the population.
 - **Confusion Matrix**: Optimized to minimize false negatives in clinical screening.
